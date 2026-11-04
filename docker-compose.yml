@@ -2,7 +2,7 @@
 # 申请共享文件夹的读权限，它们只读挂进容器，看不到别的；经 MCP 把工具交给核心的 MCP 总线，核心只路由和授权。
 #
 # 服务自己写的只读 MCP 服务（images/mcp/Dockerfile），Streamable HTTP 在 /mcp，/healthz 只读地打开每个共享文件夹
-# 验一遍。找到的文件返回成 wonton-share 引用，总线换成编号，Agent 调 wonton__share_file 发给主人。
+# 验一遍。找到的文件返回成 wonton-share 引用，总线换成编号，Agent 调 wonton__share_file 发给用户。
 name: files
 
 services:
@@ -10,14 +10,14 @@ services:
     # 由 .github/workflows/publish-images.yml 构建发布，这里写清单列表的摘要。
     image: ghcr.io/geraldpeng6/wonton-files:0.2.0@sha256:81d5367fede3e4701ffb4e050235f6a9e9a456f3ca0dbcafc1a6ac5545734064
     restart: unless-stopped
-    # 以主人的 uid:gid 运行，宿主上挂进来的只读文件没有额外权限。
+    # 以用户的 uid:gid 运行，宿主上挂进来的只读文件没有额外权限。
     user: "${PUID}:${PGID}"
     # 只读根文件系统；服务不写任何地方。
     read_only: true
     # 核心的 compose 子集不收 cap_drop 和 security_opt，所以没有 drop 能力和 no-new-privileges；
     # 非 root、只读根、共享文件夹只读挂载已经限制了影响。
     environment:
-      # 只写日期的 modified_after 按主人的时区解释；TZ 由核心注入。
+      # 只写日期的 modified_after 按用户的时区解释；TZ 由核心注入。
       TZ: "${TZ}"
     volumes:
       # 六个共享文件夹都只读：ADR-0020 把设备上传的文件放在 transfers。
@@ -38,7 +38,7 @@ services:
 x-wonton:
   spec: "0.4"
   id: app.wonton.files
-  version: 0.2.2
+  version: 0.2.3
   kind: app
   title: { zh: 文件搜索, en: File Search }
   icon: icon.svg
@@ -48,20 +48,19 @@ x-wonton:
     en: Lets your bot find and read files in the shared folders you allow
   license: MIT
   author: { name: geraldpeng6 }
-  tags: { zh: [文件, AI], en: [Files, AI] }
+  tags:
+    zh: [文件, AI]
+    en: [Files, AI]
   about:
     zh: |
-      在主人授权的共享文件夹里按文件名（子串或 glob）和内容找文件、列目录、读文字文件。找到的每个文件返回成
-      wonton-share 引用，核心换成编号后 Agent 能调 wonton__share_file 发给主人。
-      共享文件夹只读挂进容器，路径不跟随软链接，只看得到申请到的六个文件夹。
+      让 Bot 在你允许的共享文件夹里按名字和内容找文件、列出目录、读文字文件，找到的文件可以直接发给你。
+
+      共享文件夹只读，路径不跟随软链接，只看得到你放行的文件夹。
     en: |
-      Finds files by name (substring or glob) and content, lists directories, and reads text files in the shared
-      folders the owner authorizes. Each result is a wonton-share reference that the core turns into a file id so
-      the agent can call wonton__share_file. The folders are mounted read-only, symlinks are not followed, and
-      nothing outside the six granted folders is visible.
-  release_notes:
-    zh: 名字和说明更新。
-    en: Name and description update.
+      Lets your bot find files by name and content, list directories and read text files in the shared folders you allow; it can send what it finds to you.
+
+      The folders are read-only, symlinks are not followed, and nothing outside them is visible.
+  release_notes: { zh: 名字和说明更新。, en: Product name and description update. }
   mcp:
     service: mcp
     port: 8080
@@ -73,6 +72,7 @@ x-wonton:
     - storage.share.videos:read
     - storage.share.downloads:read
     - storage.share.transfers:read
+  # 自研插件，镜像是本仓库构建的，amd64 和 arm64 都发；内存按本机空闲实测取整（实测约 2.3M，取 64M）。
   requirements:
     arch: [amd64, arm64]
-    memory: 128M
+    memory: 64M
