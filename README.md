@@ -91,6 +91,8 @@ scripts/dev.sh install
 scripts/dev.sh status
 ```
 
+合并前跑 `scripts/dev.sh smoke`（探测在 `scripts/smoke-probes.sh`）：镜像没发布，本机没有清单里那个摘要时先按上面的方式构建。
+
 云吞的开发索引按提交和每个文件的 sha256 收录插件，Bot 经 MCP 总线能找到、能装它。
 发布新版本：改清单的 `version`，打 tag `v<version>`，再在云吞仓库里重新生成开发索引
 （`deploy/dev/core/store/update.sh`）。
