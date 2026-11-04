@@ -1,10 +1,10 @@
 # 文件搜索
 
-云吞（Wonton）插件：让 Bot 经 MCP 总线在主人授权的共享文件夹里按名字和内容找文件、列目录、读文字文件。
+云吞（Wonton）插件：让 Bot 经 MCP 总线在用户授权的共享文件夹里按名字和内容找文件、列目录、读文字文件。
 共享文件夹只读挂进容器，服务也以只读根文件系统运行。
 
 找到的每个文件按 ADR-0020 返回成 `resource_link`：`uri` 是 `wonton-share:<共享文件夹>/<相对路径>`，并带
-`name`、`mimeType`、`size`。核心的 MCP 总线把引用换成编号，Agent 调 `wonton__share_file` 把文件交给主人。
+`name`、`mimeType`、`size`。核心的 MCP 总线把引用换成编号，Agent 调 `wonton__share_file` 把文件交给用户。
 
 | 路径 | 内容 |
 | --- | --- |
@@ -23,7 +23,7 @@
 | `list_directory` | 列目录：文件是引用，子目录和软链接是文字 |
 | `read_text_file` | 读文字文件，默认最多 64 KiB，超过就按 `offset` 分段 |
 
-四个工具都标了 `readOnlyHint: true`，Agent 调用时不用主人确认。
+四个工具都标了 `readOnlyHint: true`，Agent 调用时不用用户确认。
 
 `modified_after` 接受 RFC 3339 或 `YYYY-MM-DD`。只有日期时使用核心注入的 `TZ`（IANA 或 POSIX）；
 scratch 镜像没有宿主的 `:/路径` 时区文件，日期过滤返回 `timezone_unavailable`，不影响其他工具和带时区的时间戳，

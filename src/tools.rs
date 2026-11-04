@@ -156,7 +156,7 @@ impl FilesServer {
 
     #[tool(
         annotations(read_only_hint = true, title = "按文件名找文件"),
-        description = "在共享文件夹里按文件名（子串或 glob）找文件，可以限定共享文件夹、子目录、修改时间和类型。结果分页，每页最多 100 个。跳过的条目和达到的上限会写在结果里。每个文件返回成 wonton-share 引用，带 name、mimeType、size。要发给主人时，对结果里的文件调 wonton__share_file。"
+        description = "在共享文件夹里按文件名（子串或 glob）找文件，可以限定共享文件夹、子目录、修改时间和类型。结果分页，每页最多 100 个。跳过的条目和达到的上限会写在结果里。每个文件返回成 wonton-share 引用，带 name、mimeType、size。要发给你时，对结果里的文件调 wonton__share_file。"
     )]
     pub async fn search_files(
         &self,
@@ -238,7 +238,7 @@ impl FilesServer {
 
     #[tool(
         annotations(read_only_hint = true, title = "按内容找文字文件"),
-        description = "在共享文件夹里按内容找文字文件，超过大小上限和二进制文件会跳过并计数。结果分页，每页最多 100 个。跳过的条目和达到的上限会写在结果里。每个文件返回成 wonton-share 引用。要发给主人时，对结果里的文件调 wonton__share_file。"
+        description = "在共享文件夹里按内容找文字文件，超过大小上限和二进制文件会跳过并计数。结果分页，每页最多 100 个。跳过的条目和达到的上限会写在结果里。每个文件返回成 wonton-share 引用。要发给你时，对结果里的文件调 wonton__share_file。"
     )]
     pub async fn search_content(
         &self,
@@ -351,7 +351,7 @@ impl FilesServer {
 
     #[tool(
         annotations(read_only_hint = true, title = "列目录"),
-        description = "列出共享文件夹里的一个目录：文件返回成 wonton-share 引用，子目录和软链接返回成文字。跳过的条目会写在结果里。结果分页，每页最多 100 项。要发给主人时，对文件调 wonton__share_file。"
+        description = "列出共享文件夹里的一个目录：文件返回成 wonton-share 引用，子目录和软链接返回成文字。跳过的条目会写在结果里。结果分页，每页最多 100 项。要发给你时，对文件调 wonton__share_file。"
     )]
     pub async fn list_directory(
         &self,
@@ -459,7 +459,7 @@ impl FilesServer {
 
     #[tool(
         annotations(read_only_hint = true, title = "读文字文件"),
-        description = "读共享文件夹里一个文字文件的内容。默认最多 64 KiB，超过就分段：结果末尾给出下一个 offset。二进制文件报错。要发给主人时，对文件调 wonton__share_file。"
+        description = "读共享文件夹里一个文字文件的内容。默认最多 64 KiB，超过就分段：结果末尾给出下一个 offset。二进制文件报错。要发给你时，对文件调 wonton__share_file。"
     )]
     pub async fn read_text_file(
         &self,
@@ -633,7 +633,7 @@ impl ServerHandler for FilesServer {
                 env!("CARGO_PKG_VERSION"),
             ))
             .with_instructions(
-                "只读的文件搜索。找到的文件是 wonton-share: 引用，要发给主人就对它调 wonton__share_file。",
+                "只读的文件搜索。找到的文件是 wonton-share: 引用，要发给你就对它调 wonton__share_file。",
             )
     }
 }

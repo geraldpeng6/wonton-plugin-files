@@ -112,7 +112,7 @@ pub fn page_result<T>(
     content.extend(extra_lines.into_iter().map(ContentBlock::text));
     content.extend(report_lines(report).into_iter().map(ContentBlock::text));
     content.push(ContentBlock::text(
-        "结果里的文件要发给主人时，对每个文件调 wonton__share_file，把编号原样放进回复。",
+        "结果里的文件要发给你时，对每个文件调 wonton__share_file，把编号原样放进回复。",
     ));
 
     let mut notes = report_value(report);
