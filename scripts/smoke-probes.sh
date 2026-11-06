@@ -1,7 +1,6 @@
 # Files：Bot 的只读文件搜索服务。sso=none 且清单没有 webui（网页和身份两项 N/A）；MCP 有 4 个只读工具。
+# shellcheck shell=bash disable=SC2034
 # 镜像没发布时在本机构建（README 的做法）。
-SSO=none
-MCP=1
 
 # 本机没有清单里那个摘要时按 README 构建，再把清单里的引用换成构建出来的（只改冒烟的副本）。
 before_install() {

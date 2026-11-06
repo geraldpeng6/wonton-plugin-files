@@ -1,5 +1,7 @@
 # 文件搜索
 
+开发流程见[插件开发指南](https://github.com/geraldpeng6/wonton-docs/blob/main/develop.md)。
+
 云吞（Wonton）插件：让 Bot 经 MCP 总线在用户授权的共享文件夹里按名字和内容找文件、列目录、读文字文件。
 共享文件夹只读挂进容器，服务也以只读根文件系统运行。
 
