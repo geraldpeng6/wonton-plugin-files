@@ -15,7 +15,7 @@ use rustix::io::Errno;
 
 use crate::report::WalkReport;
 
-/// ADR-0020：`transfers` 放设备经核心上传的文件。
+/// `transfers` 放设备经核心上传的文件。
 pub const SHARES: [&str; 6] = [
     "documents",
     "photos",
