@@ -1,6 +1,9 @@
 # Files：Bot 的只读文件搜索服务。sso=none 且清单没有 webui（网页和身份两项 N/A）；MCP 有 4 个只读工具。
 # shellcheck shell=bash disable=SC2034
 # 镜像没发布时在本机构建（README 的做法）。
+# 数据：服务 read_only、六个共享文件夹全只读挂载（docker-compose.yml），自己不存用户数据。
+export DATA_NA=1
+export SMOKE_NOTE="只读文件搜索 MCP：共享文件夹只读挂载、根文件系统只读，服务没有可写读回的用户数据"
 
 # 本机没有清单里那个摘要时按 README 构建，再把清单里的引用换成构建出来的（只改冒烟的副本）。
 before_install() {
