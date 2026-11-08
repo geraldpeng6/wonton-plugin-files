@@ -10,8 +10,10 @@ before_install() {
   local ref dig proxy="${https_proxy:-${HTTPS_PROXY:-}}" args=()
   ref="$(awk '/^ *image: /{print $2}' "$SMOKE_DIR/docker-compose.yml" | grep 'wonton-files:' | head -1)"
   [[ -n "$ref" ]] || { echo "清单里没有 wonton-files 镜像"; return 1; }
-  if [[ -z "${SMOKE_BUILD:-}" ]] && docker image inspect "$ref" >/dev/null 2>&1; then
-    echo "本机已有 $ref，不构建"
+  if [[ -z "${SMOKE_BUILD:-}" ]] && docker manifest inspect "$ref" >/dev/null 2>&1; then
+    # 镜像已发布（ghcr）：交给 install 直接拉。只查本地 image inspect 会在干净 runner 上
+    # 误判成「没发布」，本地构建出来的 dev 摘要 install 又拉不到（2026-11-08 CI 实测）。
+    echo "清单镜像已在发布仓：$ref，不本地构建"
     return 0
   fi
   [[ -n "$proxy" ]] && args=(--build-arg "https_proxy=$proxy")
