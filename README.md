@@ -5,7 +5,7 @@
 云吞（Wonton）插件：让 Bot 经 MCP 总线在用户授权的共享文件夹里按名字和内容找文件、列目录、读文字文件。
 共享文件夹只读挂进容器，服务也以只读根文件系统运行。
 
-找到的每个文件按 ADR-0020 返回成 `resource_link`：`uri` 是 `wonton-share:<共享文件夹>/<相对路径>`，并带
+找到的每个文件按[公开插件规范“工具与 MCP 总线”](https://github.com/geraldpeng6/wonton-docs/blob/main/plugin-spec.md#工具与-mcp-总线)的约定返回成 `resource_link`：`uri` 是 `wonton-share:<共享文件夹>/<相对路径>`，并带
 `name`、`mimeType`、`size`。核心的 MCP 总线把引用换成编号，Agent 调 `wonton__share_file` 把文件交给用户。
 
 | 路径 | 内容 |
@@ -43,7 +43,7 @@ scratch 镜像没有宿主的 `:/路径` 时区文件，日期过滤返回 `time
 ## 为什么自己写
 
 [rust-mcp-filesystem](https://github.com/rust-mcp-stack/rust-mcp-filesystem) v0.4.5 的查找结果是文字，媒体文件是
-内联 base64，都不能交给核心的文件服务（ADR-0020 的“代价与风险”）。官方的 MCP 文件系统服务不能关掉写工具，也不能
+内联 base64，都不能交给核心的文件服务（把文件内容整个带回来，代价和风险都大）。官方的 MCP 文件系统服务不能关掉写工具，也不能
 按内容搜。两者都只说 stdio。改用官方的 Rust SDK
 [rmcp](https://github.com/modelcontextprotocol/rust-sdk) 写一个只读服务：它和核心用的是同一个 SDK，编译成一个静态
 二进制，最终镜像是 scratch，没有 Node 运行时；只做找文件、读文字，代码短。

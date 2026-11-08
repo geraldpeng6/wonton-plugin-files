@@ -1,4 +1,4 @@
-# 文件搜索：让 Agent 在授权的共享文件夹里按文件名、按内容找文件，读文字文件（ADR-0016、ADR-0020）。只做这一件事：
+# 文件搜索：让 Agent 在授权的共享文件夹里按文件名、按内容找文件，读文字文件。只做这一件事：
 # 申请共享文件夹的读权限，它们只读挂进容器，看不到别的；经 MCP 把工具交给核心的 MCP 总线，核心只路由和授权。
 #
 # 服务自己写的只读 MCP 服务（images/mcp/Dockerfile），Streamable HTTP 在 /mcp，/healthz 只读地打开每个共享文件夹
@@ -20,7 +20,7 @@ services:
       # 只写日期的 modified_after 按用户的时区解释；TZ 由核心注入。
       TZ: "${TZ}"
     volumes:
-      # 六个共享文件夹都只读：ADR-0020 把设备上传的文件放在 transfers。
+      # 六个共享文件夹都只读：设备经核心上传的文件放在 transfers。
       - ${WONTON_SHARE_DOCUMENTS}:/shares/documents:ro
       - ${WONTON_SHARE_PHOTOS}:/shares/photos:ro
       - ${WONTON_SHARE_MUSIC}:/shares/music:ro
