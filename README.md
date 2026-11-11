@@ -1,11 +1,11 @@
 # 文件搜索
 
-开发流程见[插件开发指南](https://github.com/geraldpeng6/wonton-docs/blob/main/develop.md)。
+开发流程见[插件开发指南](https://github.com/wontonapp/wonton-docs/blob/main/develop.md)。
 
 云吞（Wonton）插件：让 Bot 经 MCP 总线在用户授权的共享文件夹里按名字和内容找文件、列目录、读文字文件。
 共享文件夹只读挂进容器，服务也以只读根文件系统运行。
 
-找到的每个文件按[公开插件规范“工具与 MCP 总线”](https://github.com/geraldpeng6/wonton-docs/blob/main/plugin-spec.md#工具与-mcp-总线)的约定返回成 `resource_link`：`uri` 是 `wonton-share:<共享文件夹>/<相对路径>`，并带
+找到的每个文件按[公开插件规范“工具与 MCP 总线”](https://github.com/wontonapp/wonton-docs/blob/main/plugin-spec.md#工具与-mcp-总线)的约定返回成 `resource_link`：`uri` 是 `wonton-share:<共享文件夹>/<相对路径>`，并带
 `name`、`mimeType`、`size`。核心的 MCP 总线把引用换成编号，Agent 调 `wonton__share_file` 把文件交给用户。
 
 | 路径 | 内容 |
