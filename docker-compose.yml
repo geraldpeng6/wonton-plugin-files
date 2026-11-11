@@ -40,12 +40,12 @@ x-wonton:
   id: app.wonton.files
   version: 0.2.3
   kind: app
-  title: { zh: 文件搜索, en: File Search }
+  title: { zh: Bot 找文件, en: File Finder for Bots }
   icon: icon.svg
   notices: [NOTICE]
   description:
-    zh: 让 Bot 在你授权的共享文件夹里找文件、读文字文件
-    en: Lets your bot find and read files in the shared folders you allow
+    zh: 让 Bot 帮你在共享文件夹里找文件：按名字或内容搜、读出文字内容，找到的直接发给你。没有单独的页面，装好后在聊天里跟 Bot 说就行。
+    en: "Lets your bots find files in your shared folders: search by name or content, read text files and send you what they find. There's no page to open — just ask a bot in chat."
   license: MIT
   author: { name: geraldpeng6 }
   tags:
