@@ -24,21 +24,23 @@ before_install() {
   grep -qF "wonton-files:dev@$dig" "$SMOKE_DIR/docker-compose.yml" || { echo "清单摘要没换成功"; return 1; }
 }
 
-mcp_check() { # tools/list 必须有全部工具且都标只读；search_files 真搜到预先放进 documents 的文件
-  local tools="$SMOKE_TOOLS" t out n_mine shares
-  shares="$SMOKE_DIR/.wonton/data/shares/documents"   # 核心按 share_var 渲染到数据目录下的 shares
-  mkdir -p "$shares"
-  printf 'wonton-smoke-content\n' >"$shares/e2e-smoke-probe.txt" || { echo "放测试文件失败：$shares"; return 1; }
+mcp_check() { # tools/list 必须有全部工具且都标只读；search_files 真搜到探针放进 documents 的文件
+  local tools="$SMOKE_TOOLS" t out n_mine
+  # 共享文件夹在核心数据目录的 shares/ 下，应用容器把它只读挂载；探针拿不到宿主路径，经核心容器写。
+  # SMOKE_CORE 由冒烟套件提供（docs/smoke.md），本文件里没有赋值，shellcheck 会误报 SC2153。
+  # shellcheck disable=SC2153
+  docker exec "$SMOKE_CORE" sh -c 'mkdir -p "$1/shares/documents" && printf "wonton-smoke-content\n" >"$1/shares/documents/smoke-probe.txt"' sh "$SMOKE_DATA_DIR" ||
+    { echo "放测试文件失败：$SMOKE_DATA_DIR/shares/documents"; return 1; }
   n_mine="$(jq --arg s "$SMOKE_SLUG" '[.[] | select(.name | startswith($s + "__"))] | length' "$tools")"
   [[ "$n_mine" -eq 4 ]] || { echo "tools/list 里本插件工具 $n_mine 个，应有 4 个"; return 1; }
   for t in search_files search_content list_directory read_text_file; do
     jq -e --arg n "$SMOKE_SLUG"__"$t" 'any(.[]; .name == $n and .annotations.readOnlyHint == true)' "$tools" >/dev/null ||
       { echo "$t 不在 tools/list 或没标只读"; return 1; }
   done
-  out="$(mcp call "$SMOKE_SLUG"__search_files '{"query":"e2e-smoke-probe","share":"documents"}')" ||
+  out="$(mcp call "$SMOKE_SLUG"__search_files '{"query":"smoke-probe","share":"documents"}')" ||
     { echo "search_files 调用失败：$out"; return 1; }
-  grep -q 'e2e-smoke-probe.txt' <<<"$out" || { echo "没搜到测试文件：$out"; return 1; }
-  out="$(mcp call "$SMOKE_SLUG"__read_text_file '{"share":"documents","path":"e2e-smoke-probe.txt"}')" ||
+  grep -q 'smoke-probe.txt' <<<"$out" || { echo "没搜到测试文件：$out"; return 1; }
+  out="$(mcp call "$SMOKE_SLUG"__read_text_file '{"share":"documents","path":"smoke-probe.txt"}')" ||
     { echo "read_text_file 调用失败：$out"; return 1; }
   grep -q 'wonton-smoke-content' <<<"$out" || { echo "读回的内容不对：$out"; return 1; }
 }
